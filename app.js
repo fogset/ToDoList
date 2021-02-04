@@ -8,11 +8,18 @@ app.set('view engine', 'ejs');
 
 
 app.get("/", function(req, res) {
-  res.send("Hello")
-  res.render('index', {foo: 'FOO'});
+  //res.send("Hello")
+
   var today = new Data();
   var currentDay = today.getDay();
+  var day ="";
 
+  if(currentDay === 6 || currentDay ===0){
+    day = "Weekend";
+  }else{
+    day = "Weekday";
+  }
+  res.render("list", {kindOfDay: day});
 
 });
 
