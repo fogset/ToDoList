@@ -1,9 +1,7 @@
-<!DOCTYPE html>
-<html lang="en" dir="ltr">
+
 <%- include("header") -%>
 
 <body>
-
   <div class="box" id="heading">
     <h1><%= listTitle %> </h1>
   </div>
@@ -19,11 +17,6 @@
           <button type="submit" name="list" value=<%= listTitle %> >+</button>
     </form>
   </div>
-  <form action="/" method="post">
-    <input type="text" name="newItem">
-    <button type="submit" name="button">Add</button>
-  </form>
-
 </body>
+
 <%- include("footer") -%>
-</html>
