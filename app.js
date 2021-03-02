@@ -1,6 +1,7 @@
 const express = require("express");
 const https = require("https");
 const bodyParser = require("body-parser");
+const mongoose = require("mongoose")
 const date = require(__dirname + "/date.js")
 
 const app = express();
@@ -20,7 +21,6 @@ app.get("/", function(req, res) {
     listTitle: day,
     newListItems: items
   });
-
 });
 
 app.post("/", function(req, res) {
