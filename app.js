@@ -13,6 +13,17 @@ app.use(bodyParser.urlencoded({
 }));
 app.use(express.static("public"));
 app.set('view engine', 'ejs');
+app.use(express.static("public"));
+
+mongoose.connect("mongodb://localhost:27017/todolistDB",{useNewUrlParser:true});
+
+const itemsSchema = new mongoose.Schema({
+    name: String,
+});
+
+const newPerson = mongoose.model("Item", itemsSchema);
+
+
 
 app.get("/", function(req, res) {
   let day = date.getDate();
