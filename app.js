@@ -5,7 +5,7 @@ const mongoose = require("mongoose")
 const date = require(__dirname + "/date.js")
 
 const app = express();
-const items = ["Buy Food", "Cook Food", "Eat Food"];
+//const items = ["Buy Food", "Cook Food", "Eat Food"];
 const workItems = [];
 
 app.use(bodyParser.urlencoded({
@@ -17,12 +17,19 @@ app.use(express.static("public"));
 
 mongoose.connect("mongodb://localhost:27017/todolistDB",{useNewUrlParser:true});
 
-const itemsSchema = new mongoose.Schema({
+const itemsSchema = {
     name: String,
+};
+
+const item = mongoose.model("Item", itemsSchema);
+const item1 = new Item({
+  name: "Banana",
 });
-
-const newPerson = mongoose.model("Item", itemsSchema);
-
+const item2 = new Item({
+  name: "orange",
+});
+item1.save();
+item2.save();
 
 
 app.get("/", function(req, res) {
