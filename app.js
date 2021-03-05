@@ -15,13 +15,19 @@ app.use(express.static("public"));
 app.set('view engine', 'ejs');
 app.use(express.static("public"));
 
-mongoose.connect("mongodb://localhost:27017/todolistDB",{useNewUrlParser:true});
+mongoose.connect("mongodb://localhost:27017/todolistDB", {
+  useNewUrlParser: true
+});
 
 const itemsSchema = {
-    name: String,
+  name: String,
+};
+const workItemsSchema = {
+  name: String,
 };
 
 const Item = mongoose.model("Item", itemsSchema);
+
 const item1 = new Item({
   name: "Welcome to your to do list",
 });
@@ -33,49 +39,80 @@ const item3 = new Item({
   name: "<-- Hit this to delete an item.",
 });
 
-const defaultItems =[item1, item2, item3];
+const defaultItems = [item1, item2, item3];
 
+const workItem= mongoose.model("workItem", workItemsSchema);
+const workItem1 = new workItem({
+  name: "working",
+});
+const defaultworkItems = [item1, item2, item3];
 
 
 app.get("/", function(req, res) {
   let day = date.getDate();
-  Item.find({}, function(err, foundItems){
+  Item.find({}, function(err, foundItems) {
 
-    if(foundItems.length === 0){
+    if (foundItems.length === 0) {
       Item.insertMany(defaultItems, function(err) {
-        if(err){
+        if (err) {
           console.log(err);
-        }else{
+        } else {
           console.log("Successfully saved default items to DB.");
         }
       });
-    }else{
+      res.redirect("/");
+    } else {
       res.render("list", {
         listTitle: day,
         newListItems: foundItems
       });
     }
   })
-
-});
+})
 
 app.post("/", function(req, res) {
-  let item = req.body.newItem;
-  console.log(req.body);
+
   if (req.body.list == "Work") {
-    workItems.push(item);
+    let itemName = req.body.newItem;
+    const item = new Item({
+      name: itemName,
+    });
+    item.save();
     res.redirect("/work");
   } else {
-    items.push(item);
+    let itemName = req.body.newItem;
+    const item = new Item({
+      name: itemName,
+    });
+    item.save();
     res.redirect("/");
   }
 })
 
 app.get("/work", function(req, res) {
-  res.render("list", {
-    listTitle: "Work List",
-    newListItems: workItems
-  });
+  // res.render("list", {
+  //   listTitle: "Work List",
+  //   newListItems: workItems
+  // });
+
+  Item.find({}, function(err, foundItems) {
+
+    if (foundItems.length === 0) {
+      Item.insertMany(defaultItems, function(err) {
+        if (err) {
+          console.log(err);
+        } else {
+          console.log("Successfully saved default items to DB.");
+        }
+      })
+      res.redirect("/work");
+    } else {
+      res.render("List", {
+        listTitle: "Work List",
+        newListItems: foundItems
+      })
+    }
+  })
 })
 app.get("/index", function(req, res) {
   res.render("index");
