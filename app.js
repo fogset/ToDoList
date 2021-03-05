@@ -21,16 +21,26 @@ const itemsSchema = {
     name: String,
 };
 
-const item = mongoose.model("Item", itemsSchema);
+const Item = mongoose.model("Item", itemsSchema);
 const item1 = new Item({
-  name: "Banana",
+  name: "Welcome to your to do list",
 });
 const item2 = new Item({
-  name: "orange",
+  name: "Hit the + button to add a new item.",
 });
-item1.save();
-item2.save();
 
+const item3 = new Item({
+  name: "<-- Hit this to delete an item.",
+});
+
+const defaultItems =[item1, item2, item3];
+Item.insertMany(defaultItems, function(err) {
+  if(err){
+    console.log(err);
+  }else{
+    console.log("Successfully saved default items to DB.");
+  }
+});
 
 app.get("/", function(req, res) {
   let day = date.getDate();
