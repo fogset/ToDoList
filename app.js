@@ -40,6 +40,11 @@ const item3 = new Item({
 });
 
 const defaultItems = [item1, item2, item3];
+const listSchema ={
+  name: String,
+  items: [itemsSchema]
+};
+const List = mongoose.model("List", listSchema);
 
 const workItem= mongoose.model("workItem", workItemsSchema);
 const workItem1 = new workItem({
@@ -97,7 +102,16 @@ app.post("/delete", function(req,res){
       res.redirect("/");
     }
   });
+})
 
+app.get("/:customListName", function(req,res){
+  const customListName = req.params.customListName;
+  const list = new List({
+    name: customListName,
+    items: defaultItems
+  });
+
+  list.save();
 })
 
 app.get("/work", function(req, res) {
