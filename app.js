@@ -52,9 +52,9 @@ const workItem1 = new workItem({
 });
 const defaultworkItems = [item1, item2, item3];
 
-
+let day = date.getDate();
 app.get("/", function(req, res) {
-  let day = date.getDate();
+
   Item.find({}, function(err, foundItems) {
 
     if (foundItems.length === 0) {
@@ -68,7 +68,7 @@ app.get("/", function(req, res) {
       res.redirect("/");
     } else {
       res.render("list", {
-        listTitle: day,
+        listTitle: "today",
         newListItems: foundItems
       });
     }
@@ -82,8 +82,8 @@ app.post("/", function(req, res) {
     const item = new Item({
       name: itemName,
     });
-    let day = date.getDate();
-    if(listName === day){
+
+    if(listName === "today"){
       item.save();
       res.redirect("/");
     }else{
