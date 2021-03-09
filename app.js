@@ -18,11 +18,8 @@ app.use(express.static("public"));
 mongoose.connect("mongodb://localhost:27017/todolistDB", {
   useNewUrlParser: true
 });
-
+//item schema
 const itemsSchema = {
-  name: String,
-};
-const workItemsSchema = {
   name: String,
 };
 
@@ -40,17 +37,15 @@ const item3 = new Item({
 });
 
 const defaultItems = [item1, item2, item3];
+
+//list schema
 const listSchema ={
   name: String,
   items: [itemsSchema]
 };
 const List = mongoose.model("List", listSchema);
 
-const workItem= mongoose.model("workItem", workItemsSchema);
-const workItem1 = new workItem({
-  name: "working",
-});
-const defaultworkItems = [item1, item2, item3];
+
 
 let day = date.getDate();
 app.get("/", function(req, res) {
@@ -98,12 +93,23 @@ app.post("/", function(req, res) {
 
 app.post("/delete", function(req,res){
   const checkedItemId = req.body.checkbox;
-  Item.findByIdAndRemove(checkedItemId, function(err){
-    if(!err){
-      console.log("Successfully deleted checked item.")
-      res.redirect("/");
-    }
-  });
+  const listName = req.body.listName;
+
+  if(listName === "Today"){
+    Item.findByIdAndRemove(checkedItemId, function(err){
+      if(!err){
+        console.log("Successfully deleted checked item.")
+        res.redirect("/");
+      }
+    });
+  }else{
+    List.findOneAndUpdate({name: listName}, {$pull: {items: {_id: checkedItemId}}}, function(err,foundList){
+      if(!err){
+        res.redirect("/" + listName);
+      }
+    });
+  }
+
 })
 
 app.get("/:customListName", function(req,res){
