@@ -77,21 +77,12 @@ app.get("/", function(req, res) {
 
 app.post("/", function(req, res) {
 
-  if (req.body.list == "Work") {
-    let itemName = req.body.newItem;
-    const item = new Item({
-      name: itemName,
-    });
-    item.save();
-    res.redirect("/work");
-  } else {
     let itemName = req.body.newItem;
     const item = new Item({
       name: itemName,
     });
     item.save();
     res.redirect("/");
-  }
 })
 
 app.post("/delete", function(req,res){
@@ -106,35 +97,27 @@ app.post("/delete", function(req,res){
 
 app.get("/:customListName", function(req,res){
   const customListName = req.params.customListName;
-  const list = new List({
-    name: customListName,
-    items: defaultItems
-  });
 
-  list.save();
-})
-
-app.get("/work", function(req, res) {
-
-  Item.find({}, function(err, foundItems) {
-
-    if (foundItems.length === 0) {
-      Item.insertMany(defaultItems, function(err) {
-        if (err) {
-          console.log(err);
-        } else {
-          console.log("Successfully saved default items to DB.");
-        }
-      })
-      res.redirect("/work");
-    } else {
-      res.render("List", {
-        listTitle: "Work List",
-        newListItems: foundItems
-      })
+  List.findOne({name: customListName}, function(err, foundList){
+    if(!err){
+      if(!foundList){
+        //Create a new list
+        const list = new List({
+          name: customListName,
+          items: defaultItems
+        });
+        list.save();
+        res.redirect("/" + customListName)
+      }else{
+        //Show an exiting list
+        res.render("list",{listTitle:foundList.name, newListItems: foundList.items})
+      }
     }
   })
+
 })
+
+
 app.get("/index", function(req, res) {
   res.render("index");
 })
