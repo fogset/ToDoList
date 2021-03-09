@@ -3,9 +3,10 @@ const https = require("https");
 const bodyParser = require("body-parser");
 const mongoose = require("mongoose")
 const date = require(__dirname + "/date.js")
+const _ = require("lodash");
 
 const app = express();
-//const items = ["Buy Food", "Cook Food", "Eat Food"];
+
 const workItems = [];
 
 app.use(bodyParser.urlencoded({
@@ -113,7 +114,7 @@ app.post("/delete", function(req,res){
 })
 
 app.get("/:customListName", function(req,res){
-  const customListName = req.params.customListName;
+  const customListName = _.capitalize(req.params.customListName);
 
   List.findOne({name: customListName}, function(err, foundList){
     if(!err){
