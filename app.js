@@ -16,7 +16,7 @@ app.use(express.static("public"));
 app.set('view engine', 'ejs');
 app.use(express.static("public"));
 
-mongoose.connect("mongodb://localhost:27017/todolistDB", {
+mongoose.connect("mongodb+srv://admin-tianhao:q123456@cluster0.zx6lb.mongodb.net/todolistDB", {
   useNewUrlParser: true
 });
 //item schema
@@ -96,7 +96,7 @@ app.post("/delete", function(req,res){
   const checkedItemId = req.body.checkbox;
   const listName = req.body.listName;
 
-  if(listName === "Today"){
+  if(listName === "today"){
     Item.findByIdAndRemove(checkedItemId, function(err){
       if(!err){
         console.log("Successfully deleted checked item.")
